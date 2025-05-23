@@ -1,8 +1,12 @@
-torch==2.0.1      
+torch      
 torch-geometric  
 numpy
 matplotlib
 pandas
 tqdm
 argparse
-
+ijson
+tqdm
+pytorch_lightning
+rich >=10.2.2
+ipywidgets
