@@ -1,6 +1,6 @@
 # Virtual Node GNN for Graph Classification
 
-![Model Architecture](./images/Rete.png)
+![Model Architecture](./images/OurNet.png)
 
 > **Figure:** Architecture of the proposed GNN model with virtual node integration. The figure illustrates the forward pass of the network, including node/virtual node embeddings, stacked GIN layers, and global graph pooling for final prediction.
 
