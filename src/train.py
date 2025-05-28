@@ -60,7 +60,7 @@ def train(train_path, model_type, batch_size, max_epochs, num_layers, embedding_
     )
 
     print("Creating model...")
-    model = GNNLightning(gnn= model_type, val_size = val_size, num_layer=num_layers, emb_dim=embedding_dim, drop_ratio=drop_ratio, dataset_name=dataset_name, loss_n=loss_n, weight_decay=weight_decay)
+    model = GNNLightning(gnn= model_type, num_layer=num_layers, emb_dim=embedding_dim, drop_ratio=drop_ratio, dataset_name=dataset_name, loss_n=loss_n, weight_decay=weight_decay)
     print("Model created successfully")
     
     print("Starting training...")
