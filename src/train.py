@@ -1,0 +1,65 @@
+from pytorch_lightning.callbacks import ModelCheckpoint
+import os
+from src.dataset import GraphDataModule
+from src.model import GNNLightning
+import pytorch_lightning as pl
+
+def train(train_path, model_type, batch_size, max_epochs, num_layers, embedding_dim, drop_ratio, loss_n, weight_decay):
+    dataset_name = os.path.basename(os.path.dirname(train_path))
+    print(f"Dataset name: {dataset_name}")
+
+    project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
+    checkpoint_dir = os.path.join(project_root, "checkpoints", dataset_name)
+    os.makedirs(checkpoint_dir, exist_ok=True)
+    print(f"Checkpoint directory: {checkpoint_dir}")
+
+    dm = GraphDataModule(train_path=train_path, batch_size=batch_size)
+
+    #I trained using torch (not lightning) so 
+    checkpoint_callback_acc = ModelCheckpoint(
+        monitor='val_acc',
+        mode='max',
+        dirpath=checkpoint_dir,
+        filename=f"model_{dataset_name}_best_acc",
+        save_top_k=1,
+        save_last=False,
+        save_on_train_epoch_end=True,
+        verbose=True,
+        auto_insert_metric_name=False
+    )
+
+    checkpoint_callback_f1 = ModelCheckpoint(
+        monitor='val_f1',
+        mode='max',
+        dirpath=checkpoint_dir,
+        filename=f"model_{dataset_name}_best_f1",
+        save_top_k=1,
+        save_last=False,
+        save_on_train_epoch_end=True,
+        verbose=True,
+        auto_insert_metric_name=False
+    )
+
+    num_checkpoints = 5
+    checkpoint_callback_epochs = ModelCheckpoint(
+        dirpath=checkpoint_dir,
+        filename=f"model_{dataset_name}_epoch_{{epoch}}",
+        save_top_k=-1,            # salva tutti i checkpoint (o usa save_top_k=None)
+        save_last=True,
+        every_n_epochs=max_epochs // num_checkpoints,        # salva ogni 20 epoche
+        verbose=True,
+        auto_insert_metric_name=False
+    )
+
+    model = GNNLightning(gnn= model_type, num_layer=num_layers, emb_dim=embedding_dim, drop_ratio=drop_ratio, dataset_name=dataset_name, loss_n=loss_n, weight_decay=weight_decay)
+
+    trainer = pl.Trainer(
+        max_epochs=100,
+        accelerator="cuda",
+        devices=1,
+        callbacks=[checkpoint_callback_acc, checkpoint_callback_f1, checkpoint_callback_epochs],
+        logger=False
+    )
+    
+    trainer.fit(model, dm)
