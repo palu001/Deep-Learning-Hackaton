@@ -1,10 +1,14 @@
+import sys
+import os
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "../..")))
 from pytorch_lightning.callbacks import ModelCheckpoint
 import os
 from src.dataset import GraphDataModule
 from src.model import GNNLightning
 import pytorch_lightning as pl
 
-def train(train_path, model_type, batch_size, max_epochs, num_layers, embedding_dim, drop_ratio, loss_n, weight_decay):
+def train(train_path, model_type, batch_size, max_epochs, num_layers, embedding_dim, drop_ratio, loss_n, weight_decay, val_size, num_checkpoints):
+    
     dataset_name = os.path.basename(os.path.dirname(train_path))
     print(f"Dataset name: {dataset_name}")
 
@@ -14,7 +18,11 @@ def train(train_path, model_type, batch_size, max_epochs, num_layers, embedding_
     os.makedirs(checkpoint_dir, exist_ok=True)
     print(f"Checkpoint directory: {checkpoint_dir}")
 
-    dm = GraphDataModule(train_path=train_path, batch_size=batch_size)
+    print(f"Training with model type: {model_type}, batch size: {batch_size}, max epochs: {max_epochs}, num layers: {num_layers}, embedding dim: {embedding_dim}, drop ratio: {drop_ratio}, loss type: {loss_n}, weight decay: {weight_decay}, validation size: {val_size}, number of checkpoints: {num_checkpoints}")
+    
+    print(f"Dataset started loading")
+    dm = GraphDataModule(train_path=train_path, batch_size=batch_size, val_split=val_size)
+    print(f"Dataset loaded successfully")
 
     #I trained using torch (not lightning) so 
     checkpoint_callback_acc = ModelCheckpoint(
@@ -41,19 +49,21 @@ def train(train_path, model_type, batch_size, max_epochs, num_layers, embedding_
         auto_insert_metric_name=False
     )
 
-    num_checkpoints = 5
     checkpoint_callback_epochs = ModelCheckpoint(
         dirpath=checkpoint_dir,
         filename=f"model_{dataset_name}_epoch_{{epoch}}",
-        save_top_k=-1,            # salva tutti i checkpoint (o usa save_top_k=None)
+        save_top_k=-1,            
         save_last=True,
-        every_n_epochs=max_epochs // num_checkpoints,        # salva ogni 20 epoche
+        every_n_epochs=max_epochs // num_checkpoints, 
         verbose=True,
         auto_insert_metric_name=False
     )
 
-    model = GNNLightning(gnn= model_type, num_layer=num_layers, emb_dim=embedding_dim, drop_ratio=drop_ratio, dataset_name=dataset_name, loss_n=loss_n, weight_decay=weight_decay)
-
+    print("Creating model...")
+    model = GNNLightning(gnn= model_type, val_size = val_size, num_layer=num_layers, emb_dim=embedding_dim, drop_ratio=drop_ratio, dataset_name=dataset_name, loss_n=loss_n, weight_decay=weight_decay)
+    print("Model created successfully")
+    
+    print("Starting training...")
     trainer = pl.Trainer(
         max_epochs=100,
         accelerator="cuda",
@@ -63,3 +73,4 @@ def train(train_path, model_type, batch_size, max_epochs, num_layers, embedding_
     )
     
     trainer.fit(model, dm)
+    print("Training completed successfully")
