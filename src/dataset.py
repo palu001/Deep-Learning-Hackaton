@@ -76,8 +76,6 @@ class GraphDataModule(pl.LightningDataModule):
         self.test_path = test_path
         self.batch_size = batch_size
         self.val_split = val_split
-        if self.train_path is not None:
-            self.setup()
 
     def setup(self, stage=None):
         if stage == 'fit' or stage is None:
@@ -95,6 +93,7 @@ class GraphDataModule(pl.LightningDataModule):
             print(f"Train dataset size: {len(self.train_dataset)}")
             self.val_dataset = Subset(full_train_dataset, indices[:val_size])
             print(f"Validation dataset size: {len(self.val_dataset)}")
+            
         if stage == 'test' or stage is None:
             if self.test_path is None:
                 raise ValueError("Test path is None during setup for 'test'")
