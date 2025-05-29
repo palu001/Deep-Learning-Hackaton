@@ -2,7 +2,7 @@
 
 ![Model Architecture](./images/OurNet.png)
 
-> **Figure:** Architecture of the proposed GNN model with virtual node integration. The figure illustrates the forward pass of the network, including node/virtual node embeddings, stacked GIN layers, and global graph pooling for final prediction.
+> **Figure:** Architecture of the proposed GNN model with virtual node integration. The figure illustrates the forward pass of the network, including node/virtual node embeddings, stacked GIN layers, and global graph pooling for final prediction. For simplicity, the illustration shows only two layers, although the actual model uses five layers.
 
 ---
 
