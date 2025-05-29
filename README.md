@@ -51,7 +51,7 @@ The core components of the model are:
 - **Node Embedding**: Each node is initialized using a learnable embedding layer of dimension 300.
 - **Virtual Node Embedding**: A dedicated virtual node with learnable parameters is connected to all graph nodes, allowing efficient propagation of global context.
 - **GIN Layers**: 5 stacked GINConv layers are used, each followed by a `BatchNorm1d()` to stabilize training.
-- **Virtual Node Updates**: After each GIN layer (except the last), the virtual node is updated through a 2-layer MLP with the following structure:
+- **Virtual Node Updates**: After each GIN layer (except the last), the virtual node is updated through a 2-layer MLP.
 - **Graph Pooling**: After the final GIN layer, node representations are aggregated using **global mean pooling**.
 - **Classification Head**: The pooled vector is passed through a final `Linear()` layer for classification into 6 classes.
 
