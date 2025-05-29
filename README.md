@@ -90,6 +90,15 @@ python3 main.py -h
 
 ## 📁 Files
 
-# TODO
+Below is a description of the main files and folders in this repository:
 
----
+- **notebook**: Contains the Kaggle notebook used to train all models. While training can also be executed without it, the reported results were obtained using this notebook.
+- **src**: Contains the source code of the project, including models, loss functions, training and testing scripts, etc.
+- **submission**: Contains the predicted labels of our best-performing models on the four datasets: A, B, C, and D.
+- **checkpoints**: Includes the saved checkpoints of our best models.
+- **logs**: Stores training logs for our top models.
+- **main.py**: Main script used to launch both training and testing.
+- **pth_to_ckpt.py**: Script used to convert `.pth` model files into `.ckpt` format. This was necessary because the notebook uses standard PyTorch, whereas the codebase is implemented in PyTorch Lightning.
+- **zipfolder.py**: Utility script to compress the submission folder into a `.gz` file format.
+
+
