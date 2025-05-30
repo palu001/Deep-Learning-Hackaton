@@ -1,12 +1,12 @@
 import sys
 import os
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "../..")))
+
 import torch
 from torch_geometric.nn import global_add_pool, global_mean_pool, global_max_pool, GlobalAttention, Set2Set
 import torchmetrics
-from src.conv import GNN_node, GNN_node_Virtualnode
-from src.loss import NoisyCrossEntropyLoss, SCELoss, GCELoss
-import os
+from source.conv import GNN_node, GNN_node_Virtualnode
+from source.loss import NoisyCrossEntropyLoss, SCELoss, GCELoss
 import pytorch_lightning as pl
 import pandas as pd
 
@@ -67,7 +67,7 @@ class GNN(torch.nn.Module):
         return self.graph_pred_linear(h_graph)
     
 class GNNLightning(pl.LightningModule):
-    def __init__(self, gnn, dataset_name, loss_n, weight_decay, num_layer, emb_dim, drop_ratio):
+    def __init__(self, gnn, dataset_name, loss_n,  num_layer, emb_dim, drop_ratio):
         super(GNNLightning, self).__init__()
         
         if gnn == 'gin':
@@ -80,8 +80,6 @@ class GNNLightning(pl.LightningModule):
             self.model = GNN(gnn_type = 'gcn', num_class = 6, num_layer = num_layer, emb_dim = emb_dim, drop_ratio = drop_ratio, virtual_node = True)
         else:
             raise ValueError('Invalid GNN type')
-        
-        self.weight_decay = weight_decay
         
         if loss_n == 1:
             self.loss_fn = torch.nn.CrossEntropyLoss()
@@ -157,7 +155,7 @@ class GNNLightning(pl.LightningModule):
 
         os.makedirs(os.path.dirname(self.log_train), exist_ok=True)
         with open(self.log_train, 'a') as f:
-            f.write(f"Epoch {self.current_epoch}: train_loss: {avg_loss}, train_acc: {avg_acc}, train_f1: {avg_f1}\n")
+            f.write(f"Epoch {self.current_epoch+1}: train_loss: {avg_loss}, train_acc: {avg_acc}, train_f1: {avg_f1}\n")
         
     def on_validation_epoch_end(self):
         avg_val_loss = sum(self.val_loss_list) / len(self.val_loss_list)
@@ -175,7 +173,7 @@ class GNNLightning(pl.LightningModule):
         os.makedirs(os.path.dirname(self.log_val), exist_ok=True)
         if not self.trainer.sanity_checking:
             with open(self.log_val, 'a') as f:
-                f.write(f"Epoch {self.current_epoch}: val_loss: {avg_val_loss}, val_acc: {avg_val_acc}, val_f1: {avg_val_f1}\n")
+                f.write(f"Epoch {self.current_epoch+1}: val_loss: {avg_val_loss}, val_acc: {avg_val_acc}, val_f1: {avg_val_f1}\n")
         
     def test_step(self, batch, batch_idx):
         output = self.forward(batch)
@@ -198,8 +196,7 @@ class GNNLightning(pl.LightningModule):
         self.test_predictions = []
 
     def configure_optimizers(self):
-        if self.weight_decay:
-            optimizer = torch.optim.AdamW(self.parameters(), lr=0.001, weight_decay=1e-5)
-        else:
-            optimizer = torch.optim.Adam(self.parameters(), lr=0.001)
+        
+        optimizer = torch.optim.Adam(self.parameters(), lr=0.001, weight_decay=1e-5)
+
         return optimizer

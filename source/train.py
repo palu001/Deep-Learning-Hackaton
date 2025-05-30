@@ -1,13 +1,14 @@
 import sys
 import os
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "../..")))
+
 from pytorch_lightning.callbacks import ModelCheckpoint
-import os
-from src.dataset import GraphDataModule
-from src.model import GNNLightning
+from pytorch_lightning.callbacks.progress.rich_progress import RichProgressBar
+from source.dataset import GraphDataModule
+from source.model import GNNLightning
 import pytorch_lightning as pl
 
-def train(train_path, model_type, batch_size, max_epochs, num_layers, embedding_dim, drop_ratio, loss_n, weight_decay, val_size, num_checkpoints):
+def train(train_path, model_type, batch_size, max_epochs, num_layers, embedding_dim, drop_ratio, loss_n, val_size, num_checkpoints):
     
     dataset_name = os.path.basename(os.path.dirname(train_path))
     print(f"Dataset name: {dataset_name}")
@@ -18,7 +19,7 @@ def train(train_path, model_type, batch_size, max_epochs, num_layers, embedding_
     os.makedirs(checkpoint_dir, exist_ok=True)
     print(f"Checkpoint directory: {checkpoint_dir}")
 
-    print(f"Training with model type: {model_type}, batch size: {batch_size}, max epochs: {max_epochs}, num layers: {num_layers}, embedding dim: {embedding_dim}, drop ratio: {drop_ratio}, loss type: {loss_n}, weight decay: {weight_decay}, validation size: {val_size}, number of checkpoints: {num_checkpoints}")
+    print(f"Training with model type: {model_type}, batch size: {batch_size}, max epochs: {max_epochs}, num layers: {num_layers}, embedding dim: {embedding_dim}, drop ratio: {drop_ratio}, loss type: {loss_n}, validation size: {val_size}, number of checkpoints: {num_checkpoints}")
     
     print(f"Dataset started loading")
     dm = GraphDataModule(train_path=train_path, batch_size=batch_size, val_split=val_size)
@@ -60,7 +61,7 @@ def train(train_path, model_type, batch_size, max_epochs, num_layers, embedding_
     )
 
     print("Creating model...")
-    model = GNNLightning(gnn= model_type, num_layer=num_layers, emb_dim=embedding_dim, drop_ratio=drop_ratio, dataset_name=dataset_name, loss_n=loss_n, weight_decay=weight_decay)
+    model = GNNLightning(gnn= model_type, num_layer=num_layers, emb_dim=embedding_dim, drop_ratio=drop_ratio, dataset_name=dataset_name, loss_n=loss_n)
     print("Model created successfully")
     
     print("Starting training...")
@@ -68,7 +69,7 @@ def train(train_path, model_type, batch_size, max_epochs, num_layers, embedding_
         max_epochs=100,
         accelerator="cuda",
         devices=1,
-        callbacks=[checkpoint_callback_acc, checkpoint_callback_f1, checkpoint_callback_epochs],
+        callbacks=[checkpoint_callback_acc, checkpoint_callback_f1, checkpoint_callback_epochs, RichProgressBar()],
         logger=False
     )
     

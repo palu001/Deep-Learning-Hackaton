@@ -1,12 +1,12 @@
 import sys
 import os
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "../..")))
-import os
-from src.dataset import GraphDataModule
-from src.model import GNNLightning
+
+from source.dataset import GraphDataModule
+from source.model import GNNLightning
 import pytorch_lightning as pl
 
-def test(test_path, model_type, batch_size, num_layers, embedding_dim, drop_ratio, loss_n, weight_decay, val_split):
+def test(test_path, model_type, batch_size, num_layers, embedding_dim, drop_ratio, loss_n, val_split):
 
     dataset_name = os.path.basename(os.path.dirname(test_path))
     print(f"Dataset name: {dataset_name}")
@@ -23,7 +23,7 @@ def test(test_path, model_type, batch_size, num_layers, embedding_dim, drop_rati
     print("Dataset loaded successfully.")
 
     print("Loading model from:", checkpoint_path)
-    model = GNNLightning.load_from_checkpoint(checkpoint_path, gnn=model_type, num_layer=num_layers, emb_dim=embedding_dim, drop_ratio=drop_ratio, dataset_name=dataset_name, loss_n=loss_n, weight_decay=weight_decay)
+    model = GNNLightning.load_from_checkpoint(checkpoint_path, gnn=model_type, num_layer=num_layers, emb_dim=embedding_dim, drop_ratio=drop_ratio, dataset_name=dataset_name, loss_n=loss_n)
     print("Model loaded successfully.")
 
     print("Starting testing...")

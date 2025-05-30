@@ -10,7 +10,7 @@ import pytorch_lightning as pl
 from torch.utils.data import Subset
 from torch_geometric.loader import DataLoader
 import random
-from src.utils import add_zeros
+from source.utils import add_zeros
 import gzip
 
 #This dataset class is used to load graph data from a JSONL file. Useful when you don't have enough memory to load the entire dataset into memory at once.
