@@ -3,3 +3,7 @@ logs/
 submission/
 *.gz
 __pycache__/
+dataset/
+*.pyc
+.ipynb_checkpoints/
+
