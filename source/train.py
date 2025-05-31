@@ -50,12 +50,16 @@ def train(train_path, model_type, batch_size, max_epochs, num_layers, embedding_
         auto_insert_metric_name=False
     )
 
+    n_epochs = max_epochs // num_checkpoints
+    if n_epochs < 1:
+        raise ValueError("Number of epochs per checkpoint must be at least 1. Please increase the number of checkpoints or max epochs.")
+
     checkpoint_callback_epochs = ModelCheckpoint(
         dirpath=checkpoint_dir,
         filename=f"model_{dataset_name}_epoch_{{epoch}}",
         save_top_k=-1,            
         save_last=False,
-        every_n_epochs=max_epochs // num_checkpoints, 
+        every_n_epochs=n_epochs, 
         verbose=True,
         auto_insert_metric_name=False
     )
