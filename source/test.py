@@ -6,6 +6,7 @@ from source.dataset import GraphDataModule
 from source.model import GNNLightning
 import pytorch_lightning as pl
 import pandas as pd
+import torch
 import numpy as np
 
 def test(test_path, model_type, batch_size, num_layers, embedding_dim, drop_ratio, loss_n, val_split):

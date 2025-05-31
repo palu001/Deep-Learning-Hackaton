@@ -6,6 +6,7 @@ from pytorch_lightning.callbacks import ModelCheckpoint
 from source.dataset import GraphDataModule
 from source.model import GNNLightning
 import pytorch_lightning as pl
+import torch
 
 def train(train_path, model_type, batch_size, max_epochs, num_layers, embedding_dim, drop_ratio, loss_n, val_size, num_checkpoints):
 
