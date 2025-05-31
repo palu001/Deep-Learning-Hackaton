@@ -50,7 +50,7 @@ The core components of the model are:
 - **Graph Pooling**: After the final GIN layer, node representations are aggregated using **global mean pooling**.
 - **Classification Head**: The pooled vector is passed through a final `Linear()` layer for classification into 6 classes.
 
-This is a single architecture from which all our models are derived by varying certain parameters, such as the loss functions. For datasets A and D, we used different loss functions and additional parameter variations specifically for the ensemble models.
+This is a single architecture from which all our models are derived by varying certain parameters, such as the loss functions. For datasets B and D, we used different loss functions for the ensemble models. While for datasets A and C, we only use a single model.
 
 ---
 
