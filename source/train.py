@@ -3,7 +3,6 @@ import os
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "../..")))
 
 from pytorch_lightning.callbacks import ModelCheckpoint
-from pytorch_lightning.callbacks.progress.rich_progress import RichProgressBar
 from source.dataset import GraphDataModule
 from source.model import GNNLightning
 import pytorch_lightning as pl
@@ -69,7 +68,7 @@ def train(train_path, model_type, batch_size, max_epochs, num_layers, embedding_
         max_epochs=100,
         accelerator="cuda",
         devices=1,
-        callbacks=[checkpoint_callback_acc, checkpoint_callback_f1, checkpoint_callback_epochs, RichProgressBar()],
+        callbacks=[checkpoint_callback_acc, checkpoint_callback_f1, checkpoint_callback_epochs],
         logger=False
     )
     
