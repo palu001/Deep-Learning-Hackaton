@@ -72,7 +72,6 @@ pip install -r requirements.txt
 ```
 
 ### 3. Train the model (default parameters).
-### Remember to manually delete the files in the logs and checkpoints directories before starting a new training session.
 ```bash
 python3 main.py --train_path <path_to_train.json.gz> --test_path <path_to_test.json.gz>
 ```

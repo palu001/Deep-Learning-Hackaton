@@ -9,6 +9,7 @@ from source.conv import GNN_node, GNN_node_Virtualnode
 from source.loss import NoisyCrossEntropyLoss, SCELoss, GCELoss
 import pytorch_lightning as pl
 import pandas as pd
+import torch.nn.functional as F
 
 
 
@@ -105,7 +106,7 @@ class GNNLightning(pl.LightningModule):
         self.val_loss_list = []
         self.val_acc_list = []
         self.val_f1_list = []
-        self.test_predictions = []
+        self.test_probabilities = []
 
 
     def forward(self, batched_data):
@@ -176,24 +177,10 @@ class GNNLightning(pl.LightningModule):
                 f.write(f"Epoch {self.current_epoch+1}: val_loss: {avg_val_loss}, val_acc: {avg_val_acc}, val_f1: {avg_val_f1}\n")
         
     def test_step(self, batch, batch_idx):
-        output = self.forward(batch)
-        preds = torch.argmax(output, dim=1)
-        preds = preds.cpu().numpy().tolist()
-        self.test_predictions.extend(preds)
-    
-        return preds
-    
-    def on_test_epoch_end(self):
-        test_graph_ids = list(range(len(self.test_predictions)))  # Generate IDs for graphs
-
-        output_df = pd.DataFrame({
-            "id": test_graph_ids,
-            "pred": self.test_predictions
-        })
-        output_csv_path = f"submission/testset_{self.dataset_name}.csv"
-        os.makedirs(os.path.dirname(output_csv_path), exist_ok=True)
-        output_df.to_csv(output_csv_path, index=False)
-        self.test_predictions = []
+        output = self.forward(batch)  # logits
+        probs = F.softmax(output, dim=1)  # probabilità per ogni classe
+        self.test_probabilities.extend(probs.cpu().numpy().tolist())  # accumula le probabilità
+        return probs
 
     def configure_optimizers(self):
         

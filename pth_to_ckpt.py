@@ -3,7 +3,7 @@ import torch
 import pytorch_lightning as pl
 
 # Carica il file originale
-state = torch.load("/home/palu001/Github/Deep-Learning-Hackaton/checkpoints/D/model_D_epoch_40.pth", map_location="cpu")
+state = torch.load("/home/palu001/Github/Deep-Learning-Hackaton/checkpoints/D/sce/model_D_epoch_180.pth", map_location="cpu")
 
 # Estrai il dizionario dei pesi
 state_dict = state["state_dict"] if "state_dict" in state else state
@@ -18,7 +18,7 @@ model = GNNLightning(gnn='gin-virtual', dataset_name='B', loss_n =1, num_layer =
 model.load_state_dict(new_state_dict)
 
 # Salva il nuovo checkpoint .ckpt
-checkpoint_path = "/home/palu001/Github/Deep-Learning-Hackaton/checkpoints/D/model_D_epoch_40.ckpt"
+checkpoint_path = "/home/palu001/Github/Deep-Learning-Hackaton/checkpoints/D/sce/model_D_epoch_180.ckpt"
 torch.save({
     'state_dict': model.state_dict(),
     'pytorch-lightning_version': pl.__version__,
