@@ -22,7 +22,7 @@ The dataset used is based on the **OGB (Open Graph Benchmark) ogbg-ppa** dataset
 
 ## ⚠️ Label Noise Injection
 
-To simulate real-world label imperfections, artificial noise was added to the labels, producing **four different variants** of the dataset:
+Artificial noise was added to the labels, producing **four different variants** of the dataset:
 
 1. **Symmetric Noise**
 2. **Asymmetric Noise**
