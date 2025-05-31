@@ -15,6 +15,7 @@ def train(train_path, model_type, batch_size, max_epochs, num_layers, embedding_
     project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
     checkpoint_dir = os.path.join(project_root, "checkpoints", dataset_name)
+    checkpoint_best = os.path.join(project_root, "checkpoints")
     os.makedirs(checkpoint_dir, exist_ok=True)
     print(f"Checkpoint directory: {checkpoint_dir}")
 
@@ -28,7 +29,7 @@ def train(train_path, model_type, batch_size, max_epochs, num_layers, embedding_
     checkpoint_callback_acc = ModelCheckpoint(
         monitor='val_acc',
         mode='max',
-        dirpath=checkpoint_dir,
+        dirpath=checkpoint_best,
         filename=f"model_{dataset_name}_best_acc",
         save_top_k=1,
         save_last=False,
@@ -40,7 +41,7 @@ def train(train_path, model_type, batch_size, max_epochs, num_layers, embedding_
     checkpoint_callback_f1 = ModelCheckpoint(
         monitor='val_f1',
         mode='max',
-        dirpath=checkpoint_dir,
+        dirpath=checkpoint_best,
         filename=f"model_{dataset_name}_best_f1",
         save_top_k=1,
         save_last=False,
@@ -53,7 +54,7 @@ def train(train_path, model_type, batch_size, max_epochs, num_layers, embedding_
         dirpath=checkpoint_dir,
         filename=f"model_{dataset_name}_epoch_{{epoch}}",
         save_top_k=-1,            
-        save_last=True,
+        save_last=False,
         every_n_epochs=max_epochs // num_checkpoints, 
         verbose=True,
         auto_insert_metric_name=False
