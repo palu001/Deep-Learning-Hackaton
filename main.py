@@ -13,10 +13,14 @@ def main(args):
     if args.train_path is None:
         print("No training path provided. Skipping training.")
         test(args.test_path, args.gnn, args.batch_size, args.num_layer, args.emb_dim, args.drop_ratio, args.loss_n, args.val_size)
+        print("Testing completed without training.")
 
     else:
         print(f"Training on dataset: {args.train_path}")
         train(args.train_path, args.gnn, args.batch_size, args.epochs, args.num_layer, args.emb_dim, args.drop_ratio, args.loss_n, args.val_size, args.num_checkpoints)
+        print(f"Testing on dataset: {args.test_path}")
+        test(args.test_path, args.gnn, args.batch_size, args.num_layer, args.emb_dim, args.drop_ratio, args.loss_n, args.val_size)
+        print("Training and testing completed.")
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Train and evaluate GNN models on graph datasets.")
