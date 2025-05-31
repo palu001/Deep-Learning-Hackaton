@@ -8,6 +8,8 @@ from source.model import GNNLightning
 import pytorch_lightning as pl
 
 def train(train_path, model_type, batch_size, max_epochs, num_layers, embedding_dim, drop_ratio, loss_n, val_size, num_checkpoints):
+
+    device = "cuda" if torch.cuda.is_available() else "cpu"
     
     dataset_name = os.path.basename(os.path.dirname(train_path))
     print(f"Dataset name: {dataset_name}")
@@ -71,7 +73,7 @@ def train(train_path, model_type, batch_size, max_epochs, num_layers, embedding_
     print("Starting training...")
     trainer = pl.Trainer(
         max_epochs=max_epochs,
-        accelerator="cuda",
+        accelerator=device,
         devices=1,
         callbacks=[checkpoint_callback_acc, checkpoint_callback_f1, checkpoint_callback_epochs],
         logger=False

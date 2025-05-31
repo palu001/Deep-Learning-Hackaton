@@ -10,6 +10,8 @@ import numpy as np
 
 def test(test_path, model_type, batch_size, num_layers, embedding_dim, drop_ratio, loss_n, val_split):
 
+    device = "cuda" if torch.cuda.is_available() else "cpu"
+
     dataset_name = os.path.basename(os.path.dirname(test_path))
     print(f"Dataset name: {dataset_name}")
 
@@ -66,7 +68,7 @@ def test(test_path, model_type, batch_size, num_layers, embedding_dim, drop_rati
     print("Starting testing...")
     trainer = pl.Trainer(
         max_epochs=1,
-        accelerator="cuda",
+        accelerator=device,
         devices=1,
         logger=False,
         enable_checkpointing=False,
