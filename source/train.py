@@ -66,7 +66,7 @@ def train(train_path, model_type, batch_size, max_epochs, num_layers, embedding_
     
     print("Starting training...")
     trainer = pl.Trainer(
-        max_epochs=100,
+        max_epochs=max_epochs,
         accelerator="cuda",
         devices=1,
         callbacks=[checkpoint_callback_acc, checkpoint_callback_f1, checkpoint_callback_epochs],
