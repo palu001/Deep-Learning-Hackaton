@@ -2,7 +2,7 @@
 
 ![Model Architecture](./images/OurNet.png)
 
-> **Figure:** Architecture of the proposed GNN model with virtual node integration. The figure illustrates the forward pass of the network, including node/virtual node embeddings, stacked GIN layers, and global graph pooling for final prediction.
+> **Figure:** Architecture of the proposed GNN model with virtual node integration. The figure illustrates the forward pass of the network, including node/virtual node embeddings, stacked GIN layers, and global graph pooling for final prediction. 
 
 ---
 
@@ -50,6 +50,8 @@ The core components of the model are:
 - **Graph Pooling**: After the final GIN layer, node representations are aggregated using **global mean pooling**.
 - **Classification Head**: The pooled vector is passed through a final `Linear()` layer for classification into 6 classes.
 
+This is a single architecture from which all our models are derived by varying certain parameters, such as the loss functions. For datasets A and D, we used different loss functions and additional parameter variations specifically for the ensemble models.
+
 ---
 
 ## 📦 Output
@@ -95,8 +97,8 @@ Below is a description of the main files and folders in this repository:
 - **notebook**: Contains the Kaggle notebook used to train all models. While training can also be executed without it, the reported results were obtained using this notebook.
 - **src**: Contains the source code of the project, including models, loss functions, training and testing scripts, etc.
 - **submission**: Contains the predicted labels of our best-performing models on the four datasets: A, B, C, and D.
-- **checkpoints**: Includes the saved checkpoints of our best models.
-- **logs**: Stores training logs for our top models.
+- **checkpoints**: Includes the saved checkpoints of our best models. The ensemble model checkpoints are also provided and are stored in dedicated folders.
+- **logs**: Stores training logs for our top models. Logs for the ensemble models are also included and are organized in dedicated folders.
 - **main.py**: Main script used to launch both training and testing.
 - **pth_to_ckpt.py**: Script used to convert `.pth` model files into `.ckpt` format. This was necessary because the notebook uses standard PyTorch, whereas the codebase is implemented in PyTorch Lightning.
 - **zipfolder.py**: Utility script to compress the submission folder into a `.gz` file format.
